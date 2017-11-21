@@ -1,6 +1,5 @@
 ## 定数
 # 対象フォルダ
-#file_path = '../data/cio/'
 file_path = './data/sample/'
 file_in_path = file_path + 'in/'
 file_out_path = file_path + 'out/'

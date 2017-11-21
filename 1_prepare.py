@@ -1,13 +1,8 @@
 import MeCab
 import sys
 import os
-
-# ループ処理
 import itertools
-
-# カウント処理
 from collections import Counter
-
 import common
 
 # 指定フォルダ内のコンテンツを読み込む
@@ -26,9 +21,9 @@ def readContents():
 	# print(contents)
 	return contents;
 
-nouns = []
-def wakati():
-	# 分かち書き
+
+# 分かち書き
+def wakatiAndCollectNouns():
 	tagger = MeCab.Tagger('')
 
 	# 分かち書き結果の出力ファイル
@@ -46,36 +41,39 @@ def wakati():
 
 	fw.close()
 
-# 出現頻度が上位の名詞をdic に追加する
-def topDics():
+
+# 出現頻度が上位の名詞を topNouns に追加する
+def collectTopNouns():
 	noun_freq = Counter(nouns)
 
 	# 出力頻度が上位の語彙をコレクト
-	dic = []
 	for noun_unq in noun_freq.most_common():
 		#print(noun_unq)
-		if len(dic) >= common.rank:
+		if len(topNouns) >= common.rank:
 		    break
 		else:
 			print(noun_unq)
-			dic.append(noun_unq[0])
+			topNouns.append(noun_unq[0])
 
-	# 出力語彙が上位の語彙をファイル出力
+	# 出力頻度が上位の語彙をファイル出力
 	fd = open(common.file_out_path + common.file_dic, 'w')
-	for d in dic:
+	for d in topNouns:
 		fd.write(d + '\n')
 	fd.close()
 
-	return dic
+#	return topNouns
 
 
-# 指定フォルダ内のコンテンツを読み込む
-contents = readContents()
+if __name__ == '__main__':
 
-# 分かち書きする
-wakati()
-#print(nouns)
-#print(len(nouns))
+	nouns = []
+	topNouns = []
 
-dic = topDics()
-#print(dic)
+	# 指定フォルダ内のコンテンツを読み込む
+	contents = readContents()
+
+	# 分かち書きし、一般名詞を収集する
+	wakatiAndCollectNouns()
+
+	# 出現頻度が上位の名詞を dic に追加する
+	collectTopNouns()
